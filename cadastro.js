@@ -1,5 +1,10 @@
 class Cadastro{
 
+    constructor(){
+     this.arrClientes = [];
+    }
+   
+
     leitura(){
             //Lendo
             let campoNome= document.getElementById("nome");
@@ -45,12 +50,24 @@ class Cadastro{
 
     salvar (){
 
+    
         //leitura
        let cliente =  this.leitura();
         //Valida
        let errors = this.validar (cliente);
-        //Saida
+
+        //Incluindo do vetor
+        if (errors.length==0){
+            this.arrClientes.push(cliente);
+        }
+
+        //Limpar o form
+        this.limparForm();
+       //Saida
        this.mensagem (errors);
+
+        //Gerar a lista da tela
+       this.atualizarLista();
     }
 
     mensagem(errors){
@@ -66,6 +83,44 @@ class Cadastro{
             }
         }
 
+    }
+
+    limparForm(){
+        let campoNome= document.getElementById("nome");
+        campoNome.value="";
+
+        let campoEmail = document.getElementById("email");
+         campoEmail.value="";
+    }
+
+    atualizarLista(){
+        let table  = document.getElementById("tbclientes"); 
+      
+        table.innerHTML= "";
+       
+        for (let i=0; i< this.arrClientes.length; i++){
+
+            let cliente =  this.arrClientes[i];
+            let tr = document.createElement("tr");  
+          
+            //TD - NOME
+            let td = document.createElement("td");  
+            let texto=  document.createTextNode(cliente.nome) ; 
+            td.appendChild(texto);
+            tr.appendChild(td);
+          
+
+            let td2 = document.createElement("td");  
+            let texto2=  document.createTextNode(cliente.email) ; 
+            td2.appendChild(texto2);
+            tr.appendChild(td2);
+           
+            //TD - EMAL
+
+
+            table.appendChild(tr); 
+        }
+    
     }
 }
 
