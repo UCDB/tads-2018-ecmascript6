@@ -4,7 +4,7 @@
      <link href="style.css" rel="stylesheet"/>
 
     <script src="cadastro.js"></script>
-
+        <meta charset="UTF-8"/>
     </head>
     <body>
 
@@ -15,7 +15,7 @@
             <div class="centro" > 
                 <button class="azul" onclick="cad.salvar()" >OK</button>  
             
-                <button class="amarelo">Cancelar</button>
+                <button class="amarelo" onclick="cad.limparForm()">Cancelar</button>
             </div>
         
         </div>
@@ -25,19 +25,9 @@
         </div>
 
 
-        <div  >
+        <div id="tbcli" >
 
-           <table  id="tbcli">
-            <thead>
-                <td> Nome</td>
-                <td> Email</td>
-            </thead>
-            <tbody id="tbclientes">
-
-            </tbody>
-
-           </table>
-
+        
         </div>
            
     </body>

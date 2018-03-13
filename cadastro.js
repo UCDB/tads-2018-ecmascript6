@@ -1,7 +1,10 @@
 class Cadastro{
 
+
+
     constructor(){
-     this.arrClientes = [];
+        this.arrClientes = [];
+        this.indiceEditar=-1;
     }
    
 
@@ -50,15 +53,21 @@ class Cadastro{
 
     salvar (){
 
-    
+        
         //leitura
        let cliente =  this.leitura();
         //Valida
        let errors = this.validar (cliente);
 
         //Incluindo do vetor
-        if (errors.length==0){
-            this.arrClientes.push(cliente);
+       
+       if (this.indiceEditar==-1){
+            if (errors.length==0){
+                this.arrClientes.push(cliente);
+            }
+        }else{  
+            this.arrClientes[this.indiceEditar] = cliente;
+            this.indiceEditar=-1;
         }
 
         //Limpar o form
@@ -91,9 +100,11 @@ class Cadastro{
 
         let campoEmail = document.getElementById("email");
          campoEmail.value="";
+
+         this.indiceEditar=-1;
     }
 
-    atualizarLista(){
+    atualizarListaAntigo(){
         let table  = document.getElementById("tbclientes"); 
       
         table.innerHTML= "";
@@ -122,6 +133,63 @@ class Cadastro{
         }
     
     }
+
+    excluir(index){
+      if ( window.confirm('Confirma exclusão?')){
+       this.arrClientes.splice(index,1);
+       this. atualizarLista();
+      }
+    }
+
+    editar (index){
+           let cli = this.arrClientes[index];
+
+           let campoNome= document.getElementById("nome");
+           campoNome.value=cli.nome;
+   
+           let campoEmail = document.getElementById("email");
+            campoEmail.value=cli.email;
+
+            this.indiceEditar = index;
+
+    }
+
+
+    atualizarLista(){
+        let table  = document.getElementById("tbcli"); 
+    
+        const str = 
+        `<table>
+            <thead>
+                <td> Nome </td>
+                <td> E-mail </td>
+                <td> Ação</td>
+            </thead>
+
+            <tbody>
+            ${ this.arrClientes.map(function (cli, index) {
+                return `<tr> 
+                    <td> ${cli.nome} </td>
+                    <td> ${cli.email}  </td>
+                    <td> 
+                        <button onclick='cad.excluir(${index})'>Excluir</button>
+                        <button onclick='cad.editar(${index})'>Editar</button>
+                    </td>
+                </tr>`
+
+             }).join('')
+            }
+               
+            
+            </tbody>
+        </table>`;
+       
+       
+       
+         table.innerHTML= str;
+        
+    }
+    
 }
 
 var cad = new Cadastro();
