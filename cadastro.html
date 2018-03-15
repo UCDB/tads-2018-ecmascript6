@@ -1,9 +1,27 @@
 <html>
 
     <head>
-     <link href="style.css" rel="stylesheet"/>
+     <link href="css/style.css" rel="stylesheet"/>
 
-    <script src="cadastro.js"></script>
+    <script  type="module">
+    
+        import Cadastro from './js/cadastro.js';
+        
+        var cad = new Cadastro();
+        cad.limparForm();
+
+        //EventListener
+        document.getElementById("btnCancelar").addEventListener("click", function (){
+            cad.limparForm();
+        })
+
+         document.getElementById("btnSalvar").addEventListener("click", function (){
+            cad.salvar();
+        })
+
+
+
+    </script>
         <meta charset="UTF-8"/>
     </head>
     <body>
@@ -13,9 +31,9 @@
             <div class="centro">  Nome: <input value="" type="text" id="nome" /> </div>
             <div class="centro"> E-mail: <input type="email" id="email"/>  </div>
             <div class="centro" > 
-                <button class="azul" onclick="cad.salvar()" >OK</button>  
+                <button id="btnSalvar" class="azul"  >OK</button>  
             
-                <button class="amarelo" onclick="cad.limparForm()">Cancelar</button>
+                <button id="btnCancelar" class="amarelo" >Cancelar</button>
             </div>
         
         </div>

@@ -1,8 +1,11 @@
+'use strict';
+
+import ClienteRepository from '../js/cliente-repository.js';
+
 class Cadastro{
 
-
-
     constructor(){
+        this.repository = new ClienteRepository();
         this.arrClientes = [];
         this.indiceEditar=-1;
     }
@@ -95,6 +98,7 @@ class Cadastro{
     }
 
     limparForm(){
+      
         let campoNome= document.getElementById("nome");
         campoNome.value="";
 
@@ -192,5 +196,5 @@ class Cadastro{
     
 }
 
-var cad = new Cadastro();
+export default Cadastro;
 
