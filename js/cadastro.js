@@ -142,6 +142,7 @@ class Cadastro{
       if ( window.confirm('Confirma exclusão?')){
        this.arrClientes.splice(index,1);
        this. atualizarLista();
+       this.limparForm();
       }
     }
 
