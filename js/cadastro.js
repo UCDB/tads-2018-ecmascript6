@@ -6,13 +6,16 @@ class Cadastro{
 
     constructor(){
         this.repository = new ClienteRepository();
-        this.arrClientes = [];
-        this.indiceEditar=-1;
+      
     }
    
 
     leitura(){
             //Lendo
+
+            let campoId= document.getElementById("id");
+            let valorId = campoId.value;
+
             let campoNome= document.getElementById("nome");
             let valorNome = campoNome.value;
 
@@ -21,6 +24,7 @@ class Cadastro{
             //objeto
             let cliente = {};
 
+            cliente.id=valorId;
             cliente.nome= valorNome;
             cliente.email= valorEmail;
             
@@ -55,33 +59,24 @@ class Cadastro{
 
 
     salvar (){
-
-        
         //leitura
        let cliente =  this.leitura();
         //Valida
        let errors = this.validar (cliente);
 
-        //Incluindo do vetor
-       
-       if (this.indiceEditar==-1){
-            if (errors.length==0){
-                this.arrClientes.push(cliente);
-            }
-        }else{  
-            this.arrClientes[this.indiceEditar] = cliente;
-            this.indiceEditar=-1;
-        }
-
+       if(errors.length==0){
+         this.repository.salvar(cliente);
+         //Gerar a lista da tela
+        this.atualizarLista();
         //Limpar o form
-        this.limparForm();
-       //Saida
-       this.mensagem (errors);
+         this.limparForm();
+       }else{
+         this.mensagem (errors);
+       }
 
-        //Gerar a lista da tela
-       this.atualizarLista();
     }
 
+    //DOM
     mensagem(errors){
 
         let msg = document.getElementById("mensagem");
@@ -97,57 +92,39 @@ class Cadastro{
 
     }
 
+     //DOM
     limparForm(){
       
+
+        let campoId= document.getElementById("id");
+        campoId.value="";
+
         let campoNome= document.getElementById("nome");
         campoNome.value="";
 
         let campoEmail = document.getElementById("email");
          campoEmail.value="";
 
-         this.indiceEditar=-1;
+         
     }
 
-    atualizarListaAntigo(){
-        let table  = document.getElementById("tbclientes"); 
-      
-        table.innerHTML= "";
-       
-        for (let i=0; i< this.arrClientes.length; i++){
+   
 
-            let cliente =  this.arrClientes[i];
-            let tr = document.createElement("tr");  
-          
-            //TD - NOME
-            let td = document.createElement("td");  
-            let texto=  document.createTextNode(cliente.nome) ; 
-            td.appendChild(texto);
-            tr.appendChild(td);
-          
-
-            let td2 = document.createElement("td");  
-            let texto2=  document.createTextNode(cliente.email) ; 
-            td2.appendChild(texto2);
-            tr.appendChild(td2);
-           
-            //TD - EMAL
-
-
-            table.appendChild(tr); 
-        }
-    
-    }
-
-    excluir(index){
+    excluir(id){
       if ( window.confirm('Confirma exclusão?')){
-       this.arrClientes.splice(index,1);
+       this.repository.excluir(id);
        this. atualizarLista();
        this.limparForm();
       }
     }
 
-    editar (index){
-           let cli = this.arrClientes[index];
+    editar (id){
+           let cli = this.repository.buscarPorId(id);
+
+
+           let campoId= document.getElementById("id");
+           campoId.value=cli.id;
+
 
            let campoNome= document.getElementById("nome");
            campoNome.value=cli.nome;
@@ -155,14 +132,12 @@ class Cadastro{
            let campoEmail = document.getElementById("email");
             campoEmail.value=cli.email;
 
-            this.indiceEditar = index;
-
     }
 
 
     atualizarLista(){
         let table  = document.getElementById("tbcli"); 
-    
+        let arrClientes = this.repository.buscarTodos();
         const str = 
         `<table>
             <thead>
@@ -172,13 +147,13 @@ class Cadastro{
             </thead>
 
             <tbody>
-            ${ this.arrClientes.map(function (cli, index) {
+            ${ arrClientes.map(function (cli, index) {
                 return `<tr> 
                     <td> ${cli.nome} </td>
                     <td> ${cli.email}  </td>
                     <td> 
-                        <button onclick='cad.excluir(${index})'>Excluir</button>
-                        <button onclick='cad.editar(${index})'>Editar</button>
+                        <button onclick='cad.excluir(${cli.id})'>Excluir</button>
+                        <button onclick='cad.editar(${cli.id})'>Editar</button>
                     </td>
                 </tr>`
 
